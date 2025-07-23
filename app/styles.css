@@ -54,7 +54,7 @@ ul {
 }
 
 .todo-table {
-    width: 55%;
+    width: 70%;
     border-collapse: collapse;
     margin: auto;
     margin-top: 20px;
@@ -176,4 +176,16 @@ input[type="text"] {
   border: 1px solid #555;
   border-radius: 6px;
   font-size: 0.9rem;
+}
+
+.filter-input {
+  max-width: 250px;
+  width: 100%;        
+  padding: 6px 10px; 
+  margin-left: 8px; 
+  margin-right: 30px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
