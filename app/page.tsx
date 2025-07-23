@@ -68,6 +68,7 @@ function TodoRow({
           <input
             ref={nameRef}
             value={nameValue}
+            placeholder='New Task'
             onChange={e => setNameValue(e.target.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') {
@@ -140,7 +141,7 @@ export default function HomePage() {
     const today = new Date();
     const newTodoId = idCount;
 
-    const newTD: ToDo = new ToDo(newTodoId, "New Task", today);
+    const newTD: ToDo = new ToDo(newTodoId, "", today);
     newTD.tags = [];
 
     setTodos(prevTodos => [...prevTodos, newTD]);
