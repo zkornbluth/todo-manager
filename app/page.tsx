@@ -9,10 +9,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 type TodoRowProps = {
   todo: ToDo;
   editingId: number | null;
-  draftName: string;
-  setDraftName: (name: string) => void;
-  draftTags: string
-  setDraftTags: (tags: string) => void;
   onStartEditing: (id: number) => void;
   onStopEditing: () => void;
   onUpdateName: (id: number, name: string) => void;
@@ -25,10 +21,6 @@ type TodoRowProps = {
 function TodoRow({
   todo,
   editingId,
-  draftName,
-  setDraftName,
-  draftTags,
-  setDraftTags,
   onStartEditing,
   onStopEditing,
   onUpdateName,
@@ -42,16 +34,15 @@ function TodoRow({
   const [tagsValue, setTagsValue] = useState(todo.tags?.join(', ') || '');
   const nameRef = useRef<HTMLInputElement>(null);
 
-  // Reset local editing state and focus when entering editing mode
   useEffect(() => {
-  if (isEditing) {
-    setNameValue(prev => prev !== todo.name ? todo.name : prev);
-    setTagsValue(prev => prev !== (todo.tags?.join(', ') || '') ? (todo.tags?.join(', ') || '') : prev);
-    setTimeout(() => {
-      nameRef.current?.focus();
-    }, 0);
-  }
-}, [isEditing]);
+    if (isEditing) {
+      setNameValue(todo.name);
+      setTagsValue(todo.tags?.join(', ') || '');
+      setTimeout(() => {
+        nameRef.current?.focus();
+      }, 0);
+    }
+  }, [isEditing]);
 
   function handleSave() {
     onUpdateName(todo.id, nameValue.trim());
@@ -65,15 +56,30 @@ function TodoRow({
     onStopEditing();
   }
 
+  function handleDateChange(date: Date) {
+    if (isEditing) {
+      onUpdateName(todo.id, nameValue.trim());
+      onUpdateTags(
+        todo.id,
+        tagsValue
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(tag => tag !== '')
+      );
+    }
+
+    onChangeDueDate(todo.id, date);
+  }
+
   return (
     <tr>
       <td style={{ textAlign: 'center' }}>
         {isEditing ? (
           <input
             ref={nameRef}
-            value={draftName}
+            value={nameValue}
             placeholder='New Task'
-            onChange={e => setDraftName(e.target.value)}
+            onChange={e => setNameValue(e.target.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') {
                 handleSave();
@@ -88,7 +94,7 @@ function TodoRow({
         <DatePicker
           className="compact-datepicker"
           selected={new Date(todo.dueDate)}
-          onChange={(date: Date) => onChangeDueDate(todo.id, date)}
+          onChange={handleDateChange}
           dateFormat="MMM d, yyyy"
         />
       </td>
@@ -96,9 +102,9 @@ function TodoRow({
         {isEditing ? (
           <input
             type="text"
-            value={draftTags}
+            value={tagsValue}
             placeholder="e.g. work, urgent"
-            onChange={e => setDraftTags(e.target.value)}
+            onChange={e => setTagsValue(e.target.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') {
                 handleSave();
@@ -138,8 +144,6 @@ export default function HomePage() {
   const [viewArchived, setViewArchived] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [filterTag, setFilterTag] = useState<string>('');
-  const [draftName, setDraftName] = useState<string>('');
-  const [draftTags, setDraftTags] = useState<string>('');
 
   function newToDo(): void {
     const today = new Date();
@@ -154,8 +158,6 @@ export default function HomePage() {
     // Start editing the new todo after it’s added
     setTimeout(() => {
       setEditingId(newTodoId);
-      setDraftName("");
-      setDraftTags("");
     }, 0);
   }
 
@@ -193,15 +195,6 @@ export default function HomePage() {
     setTodos(todos.filter(todo => todo.id !== todoId));
   }
 
-  function startEditing(id: number) {
-    const todo = todos.find(t => t.id === id);
-    if (!todo) return;
-
-    setDraftName(todo.name);
-    setDraftTags(todo.tags?.join(', ') || '');
-    setEditingId(id);
-  }
-
   function RenderToDos() {
     const activeTodos = viewArchived
       ? todos
@@ -231,17 +224,13 @@ export default function HomePage() {
               key={todo.id}
               todo={todo}
               editingId={editingId}
-              onStartEditing={startEditing}
+              onStartEditing={setEditingId}
               onStopEditing={() => setEditingId(null)}
               onUpdateName={updateTodoName}
               onUpdateTags={updateTodoTags}
               onChangeDueDate={changeDueDate}
               onComplete={completeTodo}
               onDelete={deleteTodo}
-              draftName={draftName}
-              draftTags={draftTags}
-              setDraftName={setDraftName}
-              setDraftTags={setDraftTags}
             />
           ))}
         </tbody>
