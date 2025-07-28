@@ -9,6 +9,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 type TodoRowProps = {
   todo: ToDo;
   editingId: number | null;
+  draftName: string;
+  setDraftName: (name: string) => void;
+  draftTags: string
+  setDraftTags: (tags: string) => void;
   onStartEditing: (id: number) => void;
   onStopEditing: () => void;
   onUpdateName: (id: number, name: string) => void;
@@ -21,13 +25,17 @@ type TodoRowProps = {
 function TodoRow({
   todo,
   editingId,
+  draftName,
+  setDraftName,
+  draftTags,
+  setDraftTags,
   onStartEditing,
   onStopEditing,
   onUpdateName,
   onUpdateTags,
   onChangeDueDate,
   onComplete,
-  onDelete,
+  onDelete
 }: TodoRowProps) {
   const isEditing = editingId === todo.id;
   const [nameValue, setNameValue] = useState(todo.name);
@@ -63,9 +71,9 @@ function TodoRow({
         {isEditing ? (
           <input
             ref={nameRef}
-            value={nameValue}
+            value={draftName}
             placeholder='New Task'
-            onChange={e => setNameValue(e.target.value)}
+            onChange={e => setDraftName(e.target.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') {
                 handleSave();
@@ -88,9 +96,9 @@ function TodoRow({
         {isEditing ? (
           <input
             type="text"
-            value={tagsValue}
+            value={draftTags}
             placeholder="e.g. work, urgent"
-            onChange={e => setTagsValue(e.target.value)}
+            onChange={e => setDraftTags(e.target.value)}
             onKeyDown={e => {
               if (e.key === 'Enter') {
                 handleSave();
@@ -130,6 +138,8 @@ export default function HomePage() {
   const [viewArchived, setViewArchived] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [filterTag, setFilterTag] = useState<string>('');
+  const [draftName, setDraftName] = useState<string>('');
+  const [draftTags, setDraftTags] = useState<string>('');
 
   function newToDo(): void {
     const today = new Date();
@@ -144,6 +154,8 @@ export default function HomePage() {
     // Start editing the new todo after it’s added
     setTimeout(() => {
       setEditingId(newTodoId);
+      setDraftName("");
+      setDraftTags("");
     }, 0);
   }
 
@@ -181,6 +193,15 @@ export default function HomePage() {
     setTodos(todos.filter(todo => todo.id !== todoId));
   }
 
+  function startEditing(id: number) {
+    const todo = todos.find(t => t.id === id);
+    if (!todo) return;
+
+    setDraftName(todo.name);
+    setDraftTags(todo.tags?.join(', ') || '');
+    setEditingId(id);
+  }
+
   function RenderToDos() {
     const activeTodos = viewArchived
       ? todos
@@ -210,13 +231,17 @@ export default function HomePage() {
               key={todo.id}
               todo={todo}
               editingId={editingId}
-              onStartEditing={setEditingId}
+              onStartEditing={startEditing}
               onStopEditing={() => setEditingId(null)}
               onUpdateName={updateTodoName}
               onUpdateTags={updateTodoTags}
               onChangeDueDate={changeDueDate}
               onComplete={completeTodo}
               onDelete={deleteTodo}
+              draftName={draftName}
+              draftTags={draftTags}
+              setDraftName={setDraftName}
+              setDraftTags={setDraftTags}
             />
           ))}
         </tbody>
