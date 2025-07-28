@@ -1,14 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './styles.css';
 import { ToDo } from './todos';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-function Header({ title }: { title?: string }) {
-  return <h1>{title ? title : 'Default title'}</h1>;
-}
 
 type TodoRowProps = {
   todo: ToDo;
@@ -34,20 +30,20 @@ function TodoRow({
   onDelete,
 }: TodoRowProps) {
   const isEditing = editingId === todo.id;
-  const [nameValue, setNameValue] = React.useState(todo.name);
-  const [tagsValue, setTagsValue] = React.useState(todo.tags?.join(', ') || '');
-  const nameRef = React.useRef<HTMLInputElement>(null);
+  const [nameValue, setNameValue] = useState(todo.name);
+  const [tagsValue, setTagsValue] = useState(todo.tags?.join(', ') || '');
+  const nameRef = useRef<HTMLInputElement>(null);
 
   // Reset local editing state and focus when entering editing mode
-  React.useEffect(() => {
-    if (isEditing) {
-      setNameValue(todo.name);
-      setTagsValue(todo.tags?.join(', ') || '');
-      setTimeout(() => {
-        nameRef.current?.focus();
-      }, 0);
-    }
-  }, [isEditing, todo.name, todo.tags]);
+  useEffect(() => {
+  if (isEditing) {
+    setNameValue(prev => prev !== todo.name ? todo.name : prev);
+    setTagsValue(prev => prev !== (todo.tags?.join(', ') || '') ? (todo.tags?.join(', ') || '') : prev);
+    setTimeout(() => {
+      nameRef.current?.focus();
+    }, 0);
+  }
+}, [isEditing]);
 
   function handleSave() {
     onUpdateName(todo.id, nameValue.trim());
@@ -113,15 +109,13 @@ function TodoRow({
             Save
           </button>
         ) : (
-          <button className="todo-button" onClick={() => onStartEditing(todo.id)}>
+          <button className="todo-button" onClick={() => onStartEditing(todo.id)} style={{visibility: todo.archived ? "hidden" : "visible"}}>
             Edit
           </button>
         )}
-        {!todo.archived && (
-          <button className="todo-button complete" onClick={() => onComplete(todo.id)}>
-            Complete
-          </button>
-        )}
+        <button className="todo-button complete" onClick={() => onComplete(todo.id)} style={{visibility: todo.archived ? "hidden" : "visible"}}>
+          Complete
+        </button>
         <button className="todo-button delete" onClick={() => onDelete(todo.id)}>
           Delete
         </button>
@@ -189,7 +183,7 @@ export default function HomePage() {
 
   function RenderToDos() {
     const activeTodos = viewArchived
-      ? todos.filter(todo => todo.archived)
+      ? todos
       : todos.filter(todo => !todo.archived);
 
     const filteredTodos = filterTag
@@ -252,7 +246,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <Header title="To Do List" />
+      <h1>To Do List</h1>
       <br />
       <label htmlFor="filterInput" id="tags-filter">Filter by tag:</label>
       <input
