@@ -1,6 +1,11 @@
 # To Do Manager
 
+Check it out here: [zkornbluth.github.io/todo-manager](zkornbluth.github.io/todo-manager)
+
 ## Getting Started
+
+If you want to set this up locally, follow the instructions below.
+
 ### 1. Ensure you have the following installed:
 * Git
 * node.js
