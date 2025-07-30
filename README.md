@@ -1,6 +1,6 @@
 # To Do Manager
 
-Check it out here: [zkornbluth.github.io/todo-manager](zkornbluth.github.io/todo-manager)
+Check it out here: [zkornbluth.github.io/todo-manager](https://zkornbluth.github.io/todo-manager)
 
 ## Getting Started
 
