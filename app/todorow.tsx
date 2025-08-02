@@ -89,6 +89,17 @@ export default function TodoRow({
 
   return (
     <tr>
+      <td>
+        {/* <button className="todo-button complete" onClick={() => onComplete(todo.id)} style={{visibility: todo.archived ? "hidden" : "visible"}}>
+          Complete
+        </button> */}
+        <input 
+          type="checkbox"
+          className="todo-checkbox"
+          onChange={() => onComplete(todo.id)}
+          checked={todo.archived}
+        />
+      </td>
       <td style={{ textAlign: 'center' }}>
         {isEditing ? (
           <input
@@ -143,9 +154,6 @@ export default function TodoRow({
             Edit
           </button>
         )}
-        <button className="todo-button complete" onClick={() => onComplete(todo.id)} style={{visibility: todo.archived ? "hidden" : "visible"}}>
-          Complete
-        </button>
         <button className="todo-button delete" onClick={() => onDelete(todo.id)}>
           Delete
         </button>

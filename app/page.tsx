@@ -13,7 +13,7 @@ export default function HomePage() {
   const [viewArchived, setViewArchived] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [filterTag, setFilterTag] = useState<string>('');
-  const [dueDateMode, setDueDateMode] = useState<number>(0);
+  const [dueDateMode, setDueDateMode] = useState<number>(1);
   const [taskNameMode, setTaskNameMode] = useState<number>(0);
 
   function newToDo(): void {
@@ -58,7 +58,7 @@ export default function HomePage() {
 
   function completeTodo(todoId: number) {
     setTodos(todos.map(todo =>
-      todo.id === todoId ? { ...todo, archived: true } : todo
+      todo.id === todoId ? { ...todo, archived: !todo.archived } : todo
     ));
   }
 
@@ -148,6 +148,7 @@ export default function HomePage() {
       <table className="todo-table">
         <thead>
           <tr>
+            <th>Complete</th>
             <th>
               <button className='table-header-button' onClick={onTaskNameSort}>{changeTaskNameHeader()}</button>
             </th>

@@ -210,3 +210,28 @@ input.overdue {
   cursor: pointer;
   font-weight: bold;
 }
+
+.todo-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #888;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.todo-checkbox:checked {
+  background-color: green;
+  border-color: green;
+}
+
+.todo-checkbox:checked::after {
+  content: "✓";
+  color: white;
+  font-size: 16px;
+  position: absolute;
+  top: 0;
+  left: 4px;
+}
