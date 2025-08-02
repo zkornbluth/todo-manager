@@ -1,7 +1,9 @@
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const metadata = {
   title: 'To Do List',
   icons: {
-    icon: '/list.png',
+    icon: `${basePath}list.png`,
   },
 }
 
