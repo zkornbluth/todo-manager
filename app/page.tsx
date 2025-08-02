@@ -14,6 +14,7 @@ export default function HomePage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [filterTag, setFilterTag] = useState<string>('');
   const [dueDateMode, setDueDateMode] = useState<number>(0);
+  const [taskNameMode, setTaskNameMode] = useState<number>(0);
 
   function newToDo(): void {
     const today = new Date();
@@ -77,10 +78,31 @@ export default function HomePage() {
   }
 
   function onDueDateSort() {
+    setTaskNameMode(0);
     if (dueDateMode == 2) {
-      setDueDateMode(dueDateMode - 2);
+      setDueDateMode(0);
     } else {
       setDueDateMode(dueDateMode + 1);
+    }
+  }
+
+  function changeTaskNameHeader(): string {
+    switch (taskNameMode) {
+      case 0:
+        return "Task"
+      case 1:
+        return "Task ↑"
+      case 2:
+        return "Task ↓"
+    }
+  }
+
+  function onTaskNameSort() {
+    setDueDateMode(0);
+    if (taskNameMode == 2) {
+      setTaskNameMode(0);
+    } else {
+      setTaskNameMode(taskNameMode + 1);
     }
   }
 
@@ -116,13 +138,21 @@ export default function HomePage() {
       filteredTodos.sort(sortByDueDate('desc'));
     }
 
+    if (taskNameMode == 1) {
+      filteredTodos.sort((a, b) => a.name > b.name ? 1 : -1);
+    } else if (taskNameMode == 2) {
+      filteredTodos.sort((a, b) => a.name < b.name ? 1 : -1);
+    }
+
     return (
       <table className="todo-table">
         <thead>
           <tr>
-            <th>Task</th>
             <th>
-              <button className="due-date-button" onClick={onDueDateSort}>{changeDueDateHeader()}</button>
+              <button className='table-header-button' onClick={onTaskNameSort}>{changeTaskNameHeader()}</button>
+            </th>
+            <th>
+              <button className="table-header-button" onClick={onDueDateSort}>{changeDueDateHeader()}</button>
             </th>
             <th>Tags</th>
             <th>Actions</th>

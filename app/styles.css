@@ -202,7 +202,7 @@ input.overdue {
   border-radius: 4px;
 }
 
-.due-date-button {
+.table-header-button {
   background-color: black;
   border: none;
   color: white;
