@@ -50,3 +50,5 @@ Inputting a tag name in the "Filter by tag" field shows only the tasks containin
 Clicking "Delete" removes the task forever.
 
 Tasks persist in local storage even if the server shuts down and restarts.
+
+<a href="https://www.flaticon.com/free-icons/do" title="do icons">Tab icon created by HideMaru - Flaticon</a>
