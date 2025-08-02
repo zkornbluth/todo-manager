@@ -13,6 +13,7 @@ export default function HomePage() {
   const [viewArchived, setViewArchived] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [filterTag, setFilterTag] = useState<string>('');
+  const [dueDateMode, setDueDateMode] = useState<number>(0);
 
   function newToDo(): void {
     const today = new Date();
@@ -64,6 +65,38 @@ export default function HomePage() {
     setTodos(todos.filter(todo => todo.id !== todoId));
   }
 
+  function changeDueDateHeader(): string {
+    switch (dueDateMode) {
+      case 0:
+        return "Due Date"
+      case 1:
+        return "Due Date ↑"
+      case 2:
+        return "Due Date ↓"
+    }
+  }
+
+  function onDueDateSort() {
+    if (dueDateMode == 2) {
+      setDueDateMode(dueDateMode - 2);
+    } else {
+      setDueDateMode(dueDateMode + 1);
+    }
+  }
+
+  function sortByDueDate(direction: 'asc' | 'desc') {
+    return function(a: ToDo, b: ToDo): number {
+      const adate = new Date(a.dueDate);
+      adate.setHours(0, 0, 0, 0);
+      const bdate = new Date(b.dueDate);
+      bdate.setHours(0, 0, 0, 0);
+
+      const diff = adate.getTime() - bdate.getTime();
+
+      return direction === 'asc' ? diff : -diff;
+    };
+  }
+
   function RenderToDos() {
     const activeTodos = viewArchived
       ? todos
@@ -77,12 +110,20 @@ export default function HomePage() {
         )
       : activeTodos;
 
+    if (dueDateMode == 1) {
+      filteredTodos.sort(sortByDueDate('asc'));
+    } else if (dueDateMode == 2) {
+      filteredTodos.sort(sortByDueDate('desc'));
+    }
+
     return (
       <table className="todo-table">
         <thead>
           <tr>
             <th>Task</th>
-            <th>Due Date</th>
+            <th>
+              <button className="due-date-button" onClick={onDueDateSort}>{changeDueDateHeader()}</button>
+            </th>
             <th>Tags</th>
             <th>Actions</th>
           </tr>

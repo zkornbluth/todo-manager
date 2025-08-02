@@ -201,3 +201,12 @@ input.overdue {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.due-date-button {
+  background-color: black;
+  border: none;
+  color: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-weight: bold;
+}
