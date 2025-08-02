@@ -1,8 +1,8 @@
 export const metadata = {
   title: 'To Do List',
   icons: {
-    icon: '/images.ico'
-  }
+    icon: '/list.png',
+  },
 }
 
 export default function RootLayout({
