@@ -178,6 +178,18 @@ input[type="text"] {
   font-size: 0.9rem;
 }
 
+input.due-today {
+  color: orange;
+  font-weight: bold;
+  background-color: rgba(255, 165, 0, 0.15);
+}
+
+input.overdue {
+  color: red;
+  font-weight: bold;
+  background-color: rgba(255, 0, 0, 0.15);
+}
+
 .filter-input {
   max-width: 250px;
   width: 100%;        

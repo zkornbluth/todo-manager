@@ -69,6 +69,24 @@ export default function TodoRow({
     onChangeDueDate(todo.id, date);
   }
 
+  function styleDueDate(date: Date, archived: boolean): string { // Add class to due date if due today (orange) or overdue (red)
+    let dateClass = "compact-datepicker";
+    if (archived) return dateClass;
+
+    const today = new Date();
+    const due = new Date(date);
+
+    today.setHours(0, 0, 0, 0);
+    due.setHours(0, 0, 0, 0);
+
+    if (due.getTime() < today.getTime()) {
+      dateClass += " overdue";
+    } else if (due.getTime() === today.getTime()) {
+      dateClass += " due-today"
+    }
+    return dateClass
+  }
+
   return (
     <tr>
       <td style={{ textAlign: 'center' }}>
@@ -90,7 +108,7 @@ export default function TodoRow({
       </td>
       <td>
         <DatePicker
-          className="compact-datepicker"
+          className={styleDueDate(new Date(todo.dueDate), todo.archived)}
           selected={new Date(todo.dueDate)}
           onChange={handleDateChange}
           dateFormat="MMM d, yyyy"
