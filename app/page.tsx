@@ -120,18 +120,32 @@ export default function HomePage() {
     };
   }
 
+  function isOverdue(todo: ToDo): boolean {
+    const today = new Date();
+    const due = new Date(todo.dueDate);
+
+    today.setHours(0, 0, 0, 0);
+    due.setHours(0, 0, 0, 0);
+
+    return due.getTime() < today.getTime();
+  }
+
   function RenderToDos() {
     const activeTodos = viewArchived
       ? todos
       : todos.filter(todo => !todo.archived);
 
+    const maybeOverdueTasks = viewOverdue
+      ? activeTodos.filter(todo => isOverdue(todo))
+      : activeTodos;
+
     const filteredTodos = filterTag
-      ? activeTodos.filter(todo =>
+      ? maybeOverdueTasks.filter(todo =>
           todo.tags?.some(tag =>
             tag.toLowerCase().includes(filterTag.toLowerCase())
           )
         )
-      : activeTodos;
+      : maybeOverdueTasks;
 
     if (dueDateMode == 1) {
       filteredTodos.sort(sortByDueDate('asc'));
