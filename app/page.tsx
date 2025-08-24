@@ -11,6 +11,7 @@ export default function HomePage() {
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [idCount, setIdCount] = useState<number>(0);
   const [viewArchived, setViewArchived] = useState<boolean>(false);
+  const [viewOverdue, setViewOverdue] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [filterTag, setFilterTag] = useState<string>('');
   const [dueDateMode, setDueDateMode] = useState<number>(1);
@@ -203,6 +204,7 @@ export default function HomePage() {
     <div>
       <h1>To Do List</h1>
       <br />
+      <div>
       <label htmlFor="filterInput" id="tags-filter">Filter by tag:</label>
       <input
         id="filterInput"
@@ -211,6 +213,8 @@ export default function HomePage() {
         onChange={(e) => setFilterTag(e.target.value)}
         className='filter-input'
       />
+      
+        <span>
       <label htmlFor="viewArchivedTodos">
         View Completed Tasks
       </label>
@@ -220,6 +224,19 @@ export default function HomePage() {
         checked={viewArchived}
         onChange={() => setViewArchived(!viewArchived)}
       />
+      </span>
+      <span>
+        <label htmlFor="viewOverdueTasks">
+          View Overdue Tasks
+        </label>
+        <input 
+          type="checkbox"
+          id="viewOverdueTasks"
+          checked={viewOverdue}
+          onChange={() => setViewOverdue(!viewOverdue)}
+        />
+      </span>
+      </div>
       <RenderToDos />
       <br />
       <button className="todo-button" onClick={newToDo}>+</button>

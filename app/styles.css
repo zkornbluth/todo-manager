@@ -235,3 +235,7 @@ input.overdue {
   top: 0;
   left: 4px;
 }
+
+#viewArchivedTodos {
+  margin-right: 20px;
+}
