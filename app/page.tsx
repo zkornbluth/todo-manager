@@ -130,6 +130,20 @@ export default function HomePage() {
     return due.getTime() < today.getTime();
   }
 
+  function handleCheckboxes(box: string) {
+    if (box == "overdue") {
+      setViewOverdue(!viewOverdue);
+      if (viewArchived) {
+        setViewArchived(false);
+      }
+    } else {
+      setViewArchived(!viewArchived);
+      if (viewOverdue) {
+        setViewOverdue(false);
+      }
+    }
+  }
+
   function RenderToDos() {
     const activeTodos = viewArchived
       ? todos
@@ -236,18 +250,18 @@ export default function HomePage() {
         type="checkbox"
         id="viewArchivedTodos"
         checked={viewArchived}
-        onChange={() => setViewArchived(!viewArchived)}
+        onChange={() => handleCheckboxes("archived")}
       />
       </span>
       <span>
         <label htmlFor="viewOverdueTasks">
-          View Overdue Tasks
+          View Only Overdue Tasks
         </label>
         <input 
           type="checkbox"
           id="viewOverdueTasks"
           checked={viewOverdue}
-          onChange={() => setViewOverdue(!viewOverdue)}
+          onChange={() => handleCheckboxes("overdue")}
         />
       </span>
       </div>
